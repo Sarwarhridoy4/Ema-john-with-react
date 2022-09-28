@@ -22,19 +22,28 @@ const Shop = () => {
       const addedProduct = products.find((product) => product.id === id);
       if (addedProduct) {
         const quantity = storedCart[id];
-        storedCart.quantity = quantity;
+        addedProduct.quantity = quantity;
         savedCart.push(addedProduct);
-        console.log(addedProduct);
       }
     }
     setCart(savedCart);
   }, [products]);
 
-  const handelAddToCart = (product) => {
-    // console.log(product);
-    const newCart = [...cart, product];
+  const handelAddToCart = (selectedProduct) => {
+    console.log(selectedProduct);
+    let newCart = [];
+    const exists = cart.find((product) => product.id === selectedProduct.id);
+    if (!exists) {
+      selectedProduct.quantity = 1;
+      newCart = [...cart, selectedProduct];
+    } else {
+      const rest = cart.filter((product) => product.id !== selectedProduct.id);
+      exists.quantity = exists.quantity + 1;
+      newCart =[...rest,exists]
+    }
+
     setCart(newCart);
-    addToDb(product.id);
+    addToDb(selectedProduct.id);
   };
 
   return (
